@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-finance
+  labels:
+    app: http-finance
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-finance
+  template:
+    metadata:
+      labels:
+        app: http-finance
+    spec:
+      containers:
+      - name: http-finance
+        imagePullPolicy: IfNotPresent
+        image: finance-http
+        ports:
+        - containerPort: 9000
+        env:
+        - name: GRPC_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              name: postgres-config
+              key: grpc-address
+        - name: GRPC_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: postgres-config
+              key: grpc-port
+        - name: HTTP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: postgres-config
+              key: http-port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: http-finance
+spec:
+  selector:
+    app: http-finance
+  ports:
+  - protocol: TCP
+    port: 9000
+    targetPort: 9000

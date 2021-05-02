@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo
+spec:
+  selector:
+    matchLabels:
+      app: todo
+  template:
+    metadata:
+      labels:
+        app: todo
+    spec:
+      containers:
+      - name: todo
+        imagePullPolicy: IfNotPresent
+        image: dashboard-todo
+        ports:
+        - containerPort: 9001
+        env:
+          - name: DB_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                name: mongodb-config
+                key: mongo-address
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo
+spec:
+  selector:
+    app: todo
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 9001
+      targetPort: 8000
+      nodePort: 30010

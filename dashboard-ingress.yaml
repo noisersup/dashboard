@@ -1,0 +1,46 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+  name: dashboard-ingress
+  labels:
+      name: dashboard-ingress
+spec:
+  rules:
+  - host: dashboard.com
+    http:
+      paths:
+      - path: /api/todo(/|$)(.*)/
+        backend:
+          serviceName: todo
+          servicePort: 9001
+      - path: /api/todo(/|$)(.*)
+        backend:
+          serviceName: todo
+          servicePort: 9001
+          
+      - path: /api/finances(/|$)(.*)/
+        backend:
+          serviceName: http-finance
+          servicePort: 9000
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+  name: frontend-ingress
+  labels:
+      name: frontend-ingress
+spec:
+  rules:
+  - host: dashboard.com
+    http:
+      paths:
+      - path: /
+        backend:
+          metadata:
+          serviceName: website
+          servicePort: 8080

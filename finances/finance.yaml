@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finance
+  labels:
+    app: finance
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finance
+  template:
+    metadata:
+      labels:
+        app: finance
+    spec:
+      containers:
+      - name: finance
+        imagePullPolicy: IfNotPresent
+        image: dashboard-finance
+        ports:
+        - containerPort: 9000
+        env:
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: pg-username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: pg-password
+        - name: DB_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              name: postgres-config
+              key: pg-address
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: postgres-config
+              key: pg-name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: finance
+spec:
+  selector:
+    app: finance
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 9000
+    targetPort: 9000
+    nodePort: 30000

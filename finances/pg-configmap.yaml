@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+data:
+  pg-address: postgres
+  pg-name: "postgres"
+  grpc-address: finance
+  grpc-port: "9000"
+  http-port: "9000"
