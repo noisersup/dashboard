@@ -12,19 +12,32 @@ spec:
   - host: dashboard.com
     http:
       paths:
-      - path: /api/todo(/|$)(.*)/
-        backend:
-          serviceName: todo
-          servicePort: 9001
       - path: /api/todo(/|$)(.*)
         backend:
           serviceName: todo
           servicePort: 9001
+      - path: /api/todo(/|$)(.*)/
+        backend:
+          serviceName: todo
+          servicePort: 9001
           
+      - path: /api/finances(/|$)(.*)
+        backend:
+          serviceName: http-finance
+          servicePort: 9000
       - path: /api/finances(/|$)(.*)/
         backend:
           serviceName: http-finance
           servicePort: 9000
+
+      - path: /api/pomodoro(/|$)(.*)
+        backend:
+          serviceName: pomodoro
+          servicePort: 8005
+      - path: /api/pomodoro(/|$)(.*)/
+        backend:
+          serviceName: pomodoro
+          servicePort: 8005
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress

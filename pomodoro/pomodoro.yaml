@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pomodoro
+spec:
+  selector:
+    matchLabels:
+      app: pomodoro
+  template:
+    metadata:
+      labels:
+        app: pomodoro
+    spec:
+      containers:
+      - name: pomodoro
+        imagePullPolicy: IfNotPresent
+        image: dashboard-pomodoro
+        ports:
+        - containerPort: 8005
+        env:
+          - name: DB_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                name: mongodb-config
+                key: mongo-address
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pomodoro
+spec:
+  selector:
+    app: pomodoro
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8005
+      targetPort: 8005
+      nodePort: 30050
