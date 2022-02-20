@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
@@ -13,33 +13,51 @@ spec:
     http:
       paths:
       - path: /api/todo(/|$)(.*)
+        pathType: Prefix
         backend:
-          serviceName: todo
-          servicePort: 9001
+          service:
+            name: todo
+            port: 
+              number: 9001
       - path: /api/todo(/|$)(.*)/
+        pathType: Prefix
         backend:
-          serviceName: todo
-          servicePort: 9001
+          service:
+            name: todo
+            port: 
+              number: 9001
           
       - path: /api/finances(/|$)(.*)
+        pathType: Prefix
         backend:
-          serviceName: http-finance
-          servicePort: 9000
+          service: 
+            name: http-finance
+            port: 
+              number: 9000
       - path: /api/finances(/|$)(.*)/
+        pathType: Prefix
         backend:
-          serviceName: http-finance
-          servicePort: 9000
+          service: 
+            name: http-finance
+            port: 
+              number: 9000
 
       - path: /api/pomodoro(/|$)(.*)
+        pathType: Prefix
         backend:
-          serviceName: pomodoro
-          servicePort: 8005
+          service:
+            name: pomodoro
+            port: 
+              number: 8005
       - path: /api/pomodoro(/|$)(.*)/
+        pathType: Prefix
         backend:
-          serviceName: pomodoro
-          servicePort: 8005
+          service:
+            name: pomodoro
+            port: 
+              number: 8005
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
@@ -53,7 +71,9 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          metadata:
-          serviceName: website
-          servicePort: 8080
+          service:
+            name: website
+            port: 
+              number: 8080
